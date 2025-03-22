@@ -3,6 +3,7 @@ import axios from "axios";
 import Pagination from "../components/Pagination";
 import ProductModal from "../components/ProductModal";
 import DelProductModal from "../components/DelProductModal";
+import Toast from "../components/Toast";
 
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -147,8 +148,7 @@ const [tempProduct, setTempProduct] = useState(defaultModalState);
         getProducts={getProducts}
         modalMode={modalMode} 
         isOpen={isProductModalOpen} 
-        setIsOpen={setIsProductModalOpen}
-        
+        setIsOpen={setIsProductModalOpen}      
      />
      
      {/* tempProduct={tempProduct}：需要知道刪除哪筆資料 */}
@@ -158,6 +158,7 @@ const [tempProduct, setTempProduct] = useState(defaultModalState);
      isOpen={isDelProductModalOpen} 
      setIsOpen={setIsDelProductModalOpen}
      />
+     <Toast />
     </>
   )
 }
