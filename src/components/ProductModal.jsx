@@ -1,6 +1,9 @@
-import { useRef, useEffect, useState, use } from "react";
+import { useRef, useEffect, useState } from "react";
 import axios from "axios";
 import { Modal } from 'bootstrap'; 
+import { pushMessage } from "../redux/toastSlice";
+import { useDispatch } from "react-redux";
+ 
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -48,6 +51,9 @@ function ProductModal({
         modalInstance.show();
       }
     },[isOpen])//當isOpen更新時，判斷需不需要打開modal
+
+    //
+    const dispatch = useDispatch();
 
   //透過Modal.getInstance(ref).hide來關閉
     const handleCloseProductModal = () => {
@@ -122,7 +128,15 @@ function ProductModal({
         });
       console.log(res)
     } catch (error) {
-      alert("新增產品失敗")
+      //alert("新增產品失敗")
+      //在 API 回傳後透過 slice 設定的 action 新增吐司訊息（通知使用者結果）:透過 dispatch action 完成通知
+
+      //message為console.log(error)時的結果，利用解構將其帶入提示文字
+      const { message } = error.response.data
+      dispatch(pushMessage({
+        text: message.join('、'),//在訊息間加上頓號
+        status:'failed'
+      }))
     }
   }
     //編輯產品
@@ -136,6 +150,10 @@ function ProductModal({
             is_enabled: modalData.is_enabled ? 1 : 0
           }
           });
+          dispatch(pushMessage({
+            text: '編輯產品成功',
+            status:'success'
+          }))
         console.log(res)
       } catch (error) {
         alert("編輯產品失敗")
