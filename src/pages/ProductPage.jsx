@@ -23,8 +23,8 @@ const defaultModalState = {
   imagesUrl: [""]
 };
 
-
-function ProductPage(){
+//記得帶入setIsAuth登出功能才會成功
+function ProductPage({setIsAuth}){
 
   const [products, setProducts] = useState([]);
   
@@ -84,20 +84,35 @@ const [tempProduct, setTempProduct] = useState(defaultModalState);
     setIsProductModalOpen(true);
   }
 
-
-
-
-
-
   //分頁資訊
   const [pageInfo, setPageInfo] = useState({});
 
   const handlePageChange=(page)=>{
     getProducts(page);
   }
+
+  //登出功能 (六角API格式)：登出後原本的token會被後端刪除，登入驗證會失效，所以需要再手動登入以取得新的token
+   const handleLogout = async () => {
+    try {
+      await axios.post(`${BASE_URL}/v2/logout`);
+      setIsAuth(false);
+    } catch (error) {
+      alert("登出失敗");
+    }
+  };
+
   return(
     <>
       <div className="container py-5">
+        {/*登入按鈕 */}
+        <div className="row mb-3">
+          <div className="justify-content-end">
+            <button onClick={handleLogout} type="button" className="btn btn-secondary">
+              登出
+            </button>
+          </div>
+        </div>
+
         <div className="row">
           <div className="col">
             <div className="d-flex justify-content-between">
